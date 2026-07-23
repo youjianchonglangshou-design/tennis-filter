@@ -1,6 +1,6 @@
 {
   "batch_date": "2026-07-23",
-  "query_time": "2026-07-23 13:51:11",
+  "query_time": "2026-07-23 16:47:54",
   "timezone": "Asia/Taipei",
   "filter": {
     "enabled": true,
@@ -10,42 +10,33 @@
   "matches": [
     {
       "項次": 1,
-      "日期時間": "2026-07-23 15:00",
-      "聯賽": "ITF Women Kursumlijska Banja - R16",
-      "主場": "Nina Radovanovic",
-      "客場": "Anja Stankovic",
-      "主場賠率": 1.575,
-      "客場賠率": 2.42
+      "日期時間": "2026-07-23 14:30",
+      "聯賽": "ITF Men Bacau - R1",
+      "主場": "Mihnea Maftei",
+      "客場": "Kabeer Kapasi",
+      "主場賠率": 1.68,
+      "客場賠率": 2.22
     },
     {
       "項次": 2,
-      "日期時間": "2026-07-23 15:00",
-      "聯賽": "ITF Women Cluj Napoca - R16",
-      "主場": "Nicole Gadient",
-      "客場": "Ioana Maria Sandru",
-      "主場賠率": 1.699,
-      "客場賠率": 2.18
+      "日期時間": "2026-07-23 16:00",
+      "聯賽": "ITF Men Ollersbach - R16",
+      "主場": "Kalin Ivanovski",
+      "客場": "Bor Artnak",
+      "主場賠率": 2.65,
+      "客場賠率": 1.5
     },
     {
       "項次": 3,
-      "日期時間": "2026-07-23 15:00",
-      "聯賽": "ITF Women Cluj Napoca - R16",
-      "主場": "Katarina Kujovic",
-      "客場": "Milena Ciocan",
-      "主場賠率": 2.34,
-      "客場賠率": 1.61
+      "日期時間": "2026-07-23 16:00",
+      "聯賽": "ITF Women Gentofte - R16",
+      "主場": "Masha Lazarenko",
+      "客場": "Lucia Cortez Llorca",
+      "主場賠率": 1.508,
+      "客場賠率": 2.57
     },
     {
       "項次": 4,
-      "日期時間": "2026-07-23 16:30",
-      "聯賽": "ITF Women Kursumlijska Banja - R16",
-      "主場": "Laia Petretic",
-      "客場": "Rikke De Koning",
-      "主場賠率": 2.41,
-      "客場賠率": 1.578
-    },
-    {
-      "項次": 5,
       "日期時間": "2026-07-23 16:35",
       "聯賽": "ITF Men Kursumlijska Banja - R16",
       "主場": "Elgin Khoeblal",
@@ -54,13 +45,22 @@
       "客場賠率": 1.667
     },
     {
+      "項次": 5,
+      "日期時間": "2026-07-23 17:00",
+      "聯賽": "ATP Challenger Tampere - R16",
+      "主場": "Diego Dedura",
+      "客場": "Guido Ivan Justo",
+      "主場賠率": 1.524,
+      "客場賠率": 2.59
+    },
+    {
       "項次": 6,
       "日期時間": "2026-07-23 17:00",
       "聯賽": "ITF Women Nogent-Sur-Marne - R16",
-      "主場": "Eleejah Inisan",
-      "客場": "Sophia Biolay",
-      "主場賠率": 2.23,
-      "客場賠率": 1.671
+      "主場": "Sarah Iliev",
+      "客場": "Marcelina Podlinska",
+      "主場賠率": 1.602,
+      "客場賠率": 2.36
     },
     {
       "項次": 7,
@@ -74,23 +74,14 @@
     {
       "項次": 8,
       "日期時間": "2026-07-23 17:00",
-      "聯賽": "WTA Prague - R16",
-      "主場": "Nikola Bartunkova",
-      "客場": "Lanlana Tararudee",
-      "主場賠率": 1.61,
-      "客場賠率": 2.45
+      "聯賽": "ITF Women Nogent-Sur-Marne - R16",
+      "主場": "Eleejah Inisan",
+      "客場": "Sophia Biolay",
+      "主場賠率": 2.23,
+      "客場賠率": 1.671
     },
     {
       "項次": 9,
-      "日期時間": "2026-07-23 17:00",
-      "聯賽": "ATP Challenger Tampere - R16",
-      "主場": "Diego Dedura",
-      "客場": "Guido Ivan Justo",
-      "主場賠率": 1.521,
-      "客場賠率": 2.59
-    },
-    {
-      "項次": 10,
       "日期時間": "2026-07-23 17:05",
       "聯賽": "ATP Challenger Segovia - R16",
       "主場": "Matteo Martineau",
@@ -99,25 +90,52 @@
       "客場賠率": 2.27
     },
     {
+      "項次": 10,
+      "日期時間": "2026-07-23 17:30",
+      "聯賽": "ITF Women Kursumlijska Banja - R16",
+      "主場": "Laia Petretic",
+      "客場": "Rikke De Koning",
+      "主場賠率": 2.41,
+      "客場賠率": 1.578
+    },
+    {
       "項次": 11,
+      "日期時間": "2026-07-23 17:30",
+      "聯賽": "ATP Challenger Zug - R16",
+      "主場": "Max Alcala Gurri",
+      "客場": "Dylan Dietrich",
+      "主場賠率": 2.4,
+      "客場賠率": 1.621
+    },
+    {
+      "項次": 12,
       "日期時間": "2026-07-23 17:30",
       "聯賽": "ITF Men Denia - R16",
       "主場": "Ignacio Parisca",
       "客場": "Pavel Lagutin",
-      "主場賠率": 2.48,
-      "客場賠率": 1.552
+      "主場賠率": 2.23,
+      "客場賠率": 1.671
     },
     {
-      "項次": 12,
+      "項次": 13,
       "日期時間": "2026-07-23 18:00",
       "聯賽": "ITF Women Nogent-Sur-Marne - R16",
       "主場": "Marie Mettraux",
       "客場": "Sonja Zhenikhova",
-      "主場賠率": 1.513,
-      "客場賠率": 2.53
+      "主場賠率": 1.524,
+      "客場賠率": 2.56
     },
     {
-      "項次": 13,
+      "項次": 14,
+      "日期時間": "2026-07-23 18:00",
+      "聯賽": "WTA Prague - Doubles",
+      "主場": "Weronika Falkowska / Alana Smith",
+      "客場": "Hao Ching Chan / Miyu Kato",
+      "主場賠率": 2.45,
+      "客場賠率": 1.552
+    },
+    {
+      "項次": 15,
       "日期時間": "2026-07-23 18:05",
       "聯賽": "WTA Hamburg - Doubles",
       "主場": "Dalila Jakupovic / Nika Radisic",
@@ -126,67 +144,49 @@
       "客場賠率": 1.581
     },
     {
-      "項次": 14,
+      "項次": 16,
       "日期時間": "2026-07-23 19:00",
       "聯賽": "ATP Challenger Tampere - R16",
       "主場": "Henri Squire",
       "客場": "Franco Roncadelli",
-      "主場賠率": 1.515,
-      "客場賠率": 2.58
-    },
-    {
-      "項次": 15,
-      "日期時間": "2026-07-23 19:30",
-      "聯賽": "ITF Women Horb - R16",
-      "主場": "Margaux Rouvroy",
-      "客場": "Lea Nilsson",
-      "主場賠率": 2.17,
-      "客場賠率": 1.68
-    },
-    {
-      "項次": 16,
-      "日期時間": "2026-07-23 20:00",
-      "聯賽": "ITF Women Cordenons - QF",
-      "主場": "Viola Turini",
-      "客場": "Beatrise Zeltina",
-      "主場賠率": 2.44,
-      "客場賠率": 1.526
+      "主場賠率": 1.521,
+      "客場賠率": 2.59
     },
     {
       "項次": 17,
       "日期時間": "2026-07-23 20:00",
-      "聯賽": "WTA Hamburg - R16",
-      "主場": "Oleksandra Oliynykova",
-      "客場": "Leyre Romero Gormaz",
-      "主場賠率": 1.578,
-      "客場賠率": 2.53
+      "聯賽": "WTA Prague - R16",
+      "主場": "Maria Timofeeva",
+      "客場": "Sara Bejlek",
+      "主場賠率": 2.38,
+      "客場賠率": 1.645
     },
     {
       "項次": 18,
       "日期時間": "2026-07-23 20:00",
-      "聯賽": "WTA Prague - R16",
-      "主場": "Maria Timofeeva",
-      "客場": "Sara Bejlek",
-      "主場賠率": 2.36,
-      "客場賠率": 1.654
+      "聯賽": "WTA Hamburg - R16",
+      "主場": "Paula Badosa",
+      "客場": "Panna Udvardy",
+      "主場賠率": 1.68,
+      "客場賠率": 2.3
     },
     {
       "項次": 19,
       "日期時間": "2026-07-23 20:00",
-      "聯賽": "ITF Men Metzingen - R16",
-      "主場": "Adrian Oetzbach",
-      "客場": "Jack Loge",
-      "主場賠率": 2.37,
-      "客場賠率": 1.556
+      "聯賽": "WTA Hamburg - R16",
+      "主場": "Oleksandra Oliynykova",
+      "客場": "Leyre Romero Gormaz",
+      "主場賠率": 1.592,
+      "客場賠率": 2.49
     },
     {
       "項次": 20,
       "日期時間": "2026-07-23 20:00",
-      "聯賽": "WTA Hamburg - R16",
-      "主場": "Paula Badosa",
-      "客場": "Panna Udvardy",
-      "主場賠率": 1.595,
-      "客場賠率": 2.46
+      "聯賽": "ITF Women Cordenons - QF",
+      "主場": "Viola Turini",
+      "客場": "Beatrise Zeltina",
+      "主場賠率": 2.3,
+      "客場賠率": 1.629
     },
     {
       "項次": 21,
@@ -194,26 +194,26 @@
       "聯賽": "ATP Estoril - Doubles",
       "主場": "Diego Hidalgo / Alejandro Tabilo",
       "客場": "Sander Arends / David Pel",
-      "主場賠率": 2.34,
-      "客場賠率": 1.613
+      "主場賠率": 2.38,
+      "客場賠率": 1.595
     },
     {
       "項次": 22,
       "日期時間": "2026-07-23 22:00",
-      "聯賽": "WTA Hamburg - Doubles",
-      "主場": "Noma Noha Akugue / Tamara Korpatsch",
-      "客場": "Zhibek Kulambayeva / Darja Semenistaja",
-      "主場賠率": 2.55,
-      "客場賠率": 1.515
+      "聯賽": "WTA Prague - Doubles",
+      "主場": "Harriet Dart / Maia Lumsden",
+      "客場": "Nikola Bartunkova / Dominika Salkova",
+      "主場賠率": 1.513,
+      "客場賠率": 2.56
     },
     {
       "項次": 23,
-      "日期時間": "2026-07-23 23:00",
-      "聯賽": "ITF Women Evansville - R16",
-      "主場": "Savannah Broadus",
-      "客場": "Caroline Dolehide",
-      "主場賠率": 2.45,
-      "客場賠率": 1.524
+      "日期時間": "2026-07-23 22:00",
+      "聯賽": "WTA Hamburg - Doubles",
+      "主場": "Noma Noha Akugue / Tamara Korpatsch",
+      "客場": "Zhibek Kulambayeva / Darja Semenistaja",
+      "主場賠率": 2.56,
+      "客場賠率": 1.521
     },
     {
       "項次": 24,
@@ -227,14 +227,23 @@
     {
       "項次": 25,
       "日期時間": "2026-07-23 23:00",
-      "聯賽": "ATP Kitzbuhel - QF",
-      "主場": "Alexander Bublik",
-      "客場": "Alex Molcan",
+      "聯賽": "ITF Men Rognac - R16",
+      "主場": "Mathys Picard",
+      "客場": "Loan Lestir",
       "主場賠率": 1.538,
-      "客場賠率": 2.64
+      "客場賠率": 2.41
     },
     {
       "項次": 26,
+      "日期時間": "2026-07-23 23:00",
+      "聯賽": "ITF Women Evansville - R16",
+      "主場": "Savannah Broadus",
+      "客場": "Caroline Dolehide",
+      "主場賠率": 2.19,
+      "客場賠率": 1.641
+    },
+    {
+      "項次": 27,
       "日期時間": "2026-07-23 23:00",
       "聯賽": "WTA Hamburg - R16",
       "主場": "Elina Avanesyan",
@@ -243,22 +252,13 @@
       "客場賠率": 1.559
     },
     {
-      "項次": 27,
-      "日期時間": "2026-07-23 23:00",
-      "聯賽": "ITF Men Rognac - R16",
-      "主場": "Mathys Picard",
-      "客場": "Loan Lestir",
-      "主場賠率": 1.538,
-      "客場賠率": 2.41
-    },
-    {
       "項次": 28,
-      "日期時間": "2026-07-23 23:05",
-      "聯賽": "WTA 125k Palermo - R16",
-      "主場": "Mina Hodzic",
-      "客場": "Noemi Basiletti",
-      "主場賠率": 2.23,
-      "客場賠率": 1.671
+      "日期時間": "2026-07-23 23:00",
+      "聯賽": "ATP Kitzbuhel - QF",
+      "主場": "Alexander Bublik",
+      "客場": "Alex Molcan",
+      "主場賠率": 1.633,
+      "客場賠率": 2.4
     },
     {
       "項次": 29,
@@ -275,11 +275,20 @@
       "聯賽": "ITF Women Evansville - R16",
       "主場": "Yuki Naito",
       "客場": "Fiona Crawley",
-      "主場賠率": 2.15,
-      "客場賠率": 1.667
+      "主場賠率": 2.48,
+      "客場賠率": 1.51
     },
     {
       "項次": 31,
+      "日期時間": "2026-07-24 02:00",
+      "聯賽": "ATP Challenger Bloomfield Hills - R16",
+      "主場": "Jeffrey John Wolf",
+      "客場": "Chak Lam Coleman Wong",
+      "主場賠率": 2.31,
+      "客場賠率": 1.654
+    },
+    {
+      "項次": 32,
       "日期時間": "2026-07-24 05:00",
       "聯賽": "ITF Women Saskatoon - R16",
       "主場": "Dasha Plekhanova",
@@ -288,13 +297,31 @@
       "客場賠率": 1.694
     },
     {
-      "項次": 32,
+      "項次": 33,
+      "日期時間": "2026-07-24 16:00",
+      "聯賽": "WTA Hamburg - QF",
+      "主場": "Anna Bondar",
+      "客場": "Alina Charaeva",
+      "主場賠率": 1.685,
+      "客場賠率": 2.27
+    },
+    {
+      "項次": 34,
       "日期時間": "2026-07-24 17:00",
       "聯賽": "WTA Prague - QF",
       "主場": "Marie Bouzkova",
       "客場": "Tereza Valentova",
       "主場賠率": 1.633,
       "客場賠率": 2.38
+    },
+    {
+      "項次": 35,
+      "日期時間": "2026-07-24 18:00",
+      "聯賽": "ATP Estoril - QF",
+      "主場": "Roman Andres Burruchaga",
+      "客場": "Alexander Blockx",
+      "主場賠率": 2.32,
+      "客場賠率": 1.676
     }
   ]
 }
