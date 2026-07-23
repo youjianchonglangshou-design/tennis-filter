@@ -1,18 +1,28 @@
 from __future__ import annotations
 
+import base64
 import json
 from datetime import datetime
 from typing import Any
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 import pandas as pd
 import streamlit as st
+from curl_cffi import requests as http_requests
 
 from crawler import CrawlerError, PinnacleCrawler
 
 TAIPEI_TZ = ZoneInfo("Asia/Taipei")
 DEFAULT_MIN_ODDS = 1.50
 DEFAULT_MAX_ODDS = 1.70
+
+# 下載與回寫 GitHub 都固定使用這個檔名。
+JSON_FILENAME = "today_matches.json"
+GITHUB_REPOSITORY = "youjianchonglangshou-design/tennis-filter"
+GITHUB_BRANCH = "main"
+GITHUB_JSON_PATH = JSON_FILENAME
+
 TABLE_COLUMNS = [
     "項次",
     "日期時間",
@@ -77,8 +87,9 @@ st.markdown(
     }
     .status-value {
         color: #e6fffb;
-        font-size: 1.08rem;
+        font-size: 1.03rem;
         font-weight: 700;
+        overflow-wrap: anywhere;
     }
     div[data-testid="stDataFrame"] {
         border: 1px solid rgba(94, 234, 212, 0.22);
@@ -98,13 +109,18 @@ st.markdown(
 )
 
 
-def get_api_key() -> str | None:
-    """優先讀取 Streamlit Secrets；未設定時使用 crawler 內建 guest key。"""
+def get_secret(name: str) -> str | None:
+    """安全讀取 Streamlit Secrets。"""
     try:
-        value = st.secrets.get("PINNACLE_API_KEY")
-        return str(value) if value else None
+        value = st.secrets.get(name)
+        return str(value).strip() if value else None
     except Exception:
         return None
+
+
+def get_api_key() -> str | None:
+    """未設定時使用 crawler 內建的 Pinnacle guest key。"""
+    return get_secret("PINNACLE_API_KEY")
 
 
 def initialize_state() -> None:
@@ -119,10 +135,125 @@ def initialize_state() -> None:
         "applied_min_odds": DEFAULT_MIN_ODDS,
         "applied_max_odds": DEFAULT_MAX_ODDS,
         "last_error": None,
+        "github_sync_status": "尚未同步",
+        "github_sync_message": None,
+        "github_commit_sha": None,
+        "github_file_url": None,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
+
+
+def make_json_payload() -> dict[str, Any]:
+    return {
+        "batch_date": datetime.now(TAIPEI_TZ).strftime("%Y-%m-%d"),
+        "query_time": st.session_state.last_updated,
+        "timezone": "Asia/Taipei",
+        "filter": {
+            "enabled": st.session_state.applied_filter_enabled,
+            "min_odds": st.session_state.applied_min_odds,
+            "max_odds": st.session_state.applied_max_odds,
+        },
+        "matches": st.session_state.matches,
+    }
+
+
+def make_json_text() -> str:
+    return json.dumps(make_json_payload(), ensure_ascii=False, indent=2)
+
+
+def make_json_bytes() -> bytes:
+    return make_json_text().encode("utf-8")
+
+
+def push_json_to_github(json_text: str) -> dict[str, str | bool | None]:
+    """建立或覆蓋 main/today_matches.json。"""
+    token = get_secret("GITHUB_TOKEN")
+    if not token:
+        return {
+            "ok": False,
+            "status": "尚未設定",
+            "message": "請先在 Streamlit Secrets 設定 GITHUB_TOKEN。",
+            "commit_sha": None,
+            "file_url": None,
+        }
+
+    encoded_path = quote(GITHUB_JSON_PATH, safe="/")
+    api_url = (
+        f"https://api.github.com/repos/{GITHUB_REPOSITORY}/contents/{encoded_path}"
+    )
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "tennis-filter-streamlit",
+    }
+
+    current_sha: str | None = None
+    current_response = http_requests.get(
+        api_url,
+        headers=headers,
+        params={"ref": GITHUB_BRANCH},
+        timeout=20,
+    )
+
+    if current_response.status_code == 200:
+        current_sha = current_response.json().get("sha")
+    elif current_response.status_code != 404:
+        detail = current_response.text[:500]
+        raise RuntimeError(
+            f"讀取 GitHub 現有 JSON 失敗：HTTP {current_response.status_code}｜{detail}"
+        )
+
+    payload: dict[str, Any] = {
+        "message": (
+            f"更新 {JSON_FILENAME}｜"
+            f"{st.session_state.last_updated or datetime.now(TAIPEI_TZ).strftime('%Y-%m-%d %H:%M:%S')}"
+        ),
+        "content": base64.b64encode(json_text.encode("utf-8")).decode("ascii"),
+        "branch": GITHUB_BRANCH,
+    }
+    if current_sha:
+        payload["sha"] = current_sha
+
+    write_response = http_requests.put(
+        api_url,
+        headers=headers,
+        json=payload,
+        timeout=30,
+    )
+    if write_response.status_code not in (200, 201):
+        detail = write_response.text[:500]
+        raise RuntimeError(
+            f"回寫 GitHub JSON 失敗：HTTP {write_response.status_code}｜{detail}"
+        )
+
+    response_data = write_response.json()
+    commit_sha = response_data.get("commit", {}).get("sha")
+    file_url = response_data.get("content", {}).get("html_url")
+
+    return {
+        "ok": True,
+        "status": "同步成功",
+        "message": f"已覆蓋 {GITHUB_BRANCH}/{GITHUB_JSON_PATH}",
+        "commit_sha": commit_sha,
+        "file_url": file_url,
+    }
+
+
+def sync_current_json_to_github() -> None:
+    try:
+        result = push_json_to_github(make_json_text())
+        st.session_state.github_sync_status = result["status"]
+        st.session_state.github_sync_message = result["message"]
+        st.session_state.github_commit_sha = result["commit_sha"]
+        st.session_state.github_file_url = result["file_url"]
+    except Exception as exc:
+        st.session_state.github_sync_status = "同步失敗"
+        st.session_state.github_sync_message = str(exc)
+        st.session_state.github_commit_sha = None
+        st.session_state.github_file_url = None
 
 
 def run_analysis(
@@ -131,7 +262,7 @@ def run_analysis(
     min_odds: float,
     max_odds: float,
 ) -> None:
-    """執行一次抓取，成功後更新 Session State。"""
+    """抓取比賽，成功後更新畫面並同步固定 JSON 到 GitHub。"""
     crawler = PinnacleCrawler(api_key=get_api_key())
     matches = crawler.get_matches(
         filter_enabled=filter_enabled,
@@ -148,20 +279,7 @@ def run_analysis(
     st.session_state.applied_max_odds = float(max_odds)
     st.session_state.last_error = None
 
-
-def make_json_bytes() -> bytes:
-    payload = {
-        "batch_date": datetime.now(TAIPEI_TZ).strftime("%Y-%m-%d"),
-        "query_time": st.session_state.last_updated,
-        "timezone": "Asia/Taipei",
-        "filter": {
-            "enabled": st.session_state.applied_filter_enabled,
-            "min_odds": st.session_state.applied_min_odds,
-            "max_odds": st.session_state.applied_max_odds,
-        },
-        "matches": st.session_state.matches,
-    }
-    return json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+    sync_current_json_to_github()
 
 
 def render_status_cards() -> None:
@@ -172,38 +290,27 @@ def render_status_cards() -> None:
         if st.session_state.applied_filter_enabled
         else "未啟用"
     )
+    github_status = st.session_state.github_sync_status
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(
-            f"""
-            <div class="status-card">
-                <div class="status-label">最後更新｜台灣時間</div>
-                <div class="status-value">{updated}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col2:
-        st.markdown(
-            f"""
-            <div class="status-card">
-                <div class="status-label">符合條件賽事</div>
-                <div class="status-value">{count} 場</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with col3:
-        st.markdown(
-            f"""
-            <div class="status-card">
-                <div class="status-label">目前賠率篩選</div>
-                <div class="status-value">{filter_text}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+    col1, col2, col3, col4 = st.columns(4)
+    cards = (
+        (col1, "最後更新｜台灣時間", updated),
+        (col2, "符合條件賽事", f"{count} 場"),
+        (col3, "目前賠率篩選", filter_text),
+        (col4, f"GitHub｜{JSON_FILENAME}", github_status),
+    )
+
+    for column, label, value in cards:
+        with column:
+            st.markdown(
+                f"""
+                <div class="status-card">
+                    <div class="status-label">{label}</div>
+                    <div class="status-value">{value}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 initialize_state()
@@ -213,7 +320,7 @@ st.markdown(
     <div class="hero">
         <div class="hero-title">🎾 Pinnacle 網球賽事分析</div>
         <div class="hero-subtitle">
-            首次進入自動抓取；按下「重新分析」可依目前賠率條件再次取得資料。
+            首次進入自動抓取；按下「重新分析」會重新取得資料，並覆蓋 GitHub 的 today_matches.json。
         </div>
     </div>
     """,
@@ -260,7 +367,7 @@ should_fetch = not st.session_state.initialized or submitted
 if should_fetch:
     st.session_state.initialized = True
     try:
-        with st.spinner("正在抓取 Pinnacle 網球賽事與賠率……"):
+        with st.spinner("正在抓取 Pinnacle 網球賽事、整理 JSON 並同步 GitHub……"):
             run_analysis(
                 filter_enabled=filter_enabled,
                 min_odds=float(min_odds),
@@ -273,9 +380,30 @@ if should_fetch:
 
 if st.session_state.last_error:
     st.error(st.session_state.last_error)
-    st.info("可稍後按下「重新分析」重試；若 API key 已變更，可在 Streamlit Secrets 設定 PINNACLE_API_KEY。")
+    st.info(
+        "可稍後按下「重新分析」重試；若 API key 已變更，可在 Streamlit Secrets 設定 PINNACLE_API_KEY。"
+    )
 
 render_status_cards()
+
+sync_status = st.session_state.github_sync_status
+sync_message = st.session_state.github_sync_message
+if sync_status == "同步成功":
+    commit_sha = st.session_state.github_commit_sha
+    sha_text = f"｜Commit {commit_sha[:7]}" if commit_sha else ""
+    file_url = st.session_state.github_file_url
+    if file_url:
+        st.success(f"GitHub 同步成功：{GITHUB_JSON_PATH}{sha_text}")
+        st.markdown(f"[開啟 GitHub JSON]({file_url})")
+    else:
+        st.success(f"GitHub 同步成功：{GITHUB_JSON_PATH}{sha_text}")
+elif sync_status == "尚未設定":
+    st.info(
+        "JSON 下載功能已可使用；要自動回寫 GitHub，請在 Streamlit Secrets 加入 GITHUB_TOKEN。"
+    )
+elif sync_status == "同步失敗" and sync_message:
+    st.warning(f"GitHub 同步失敗：{sync_message}")
+
 st.write("")
 
 matches = st.session_state.matches
@@ -299,16 +427,16 @@ if matches:
 else:
     st.warning("目前沒有符合篩選條件的賽事，或尚未成功取得資料。")
 
-filename_time = datetime.now(TAIPEI_TZ).strftime("%Y-%m-%d_%H%M%S")
 st.download_button(
-    label="⬇️ 下載 JSON",
+    label=f"⬇️ 下載 {JSON_FILENAME}",
     data=make_json_bytes(),
-    file_name=f"pinnacle_matches_{filename_time}.json",
+    file_name=JSON_FILENAME,
     mime="application/json",
     use_container_width=True,
     disabled=st.session_state.last_updated is None,
 )
 
 st.caption(
-    "資料時間與最後更新時間皆以 Asia/Taipei 顯示。Pinnacle guest API、端點或防爬規則若變更，抓取可能失敗。"
+    "資料時間與最後更新時間皆以 Asia/Taipei 顯示。每次首次載入或按下重新分析，"
+    "都會嘗試覆蓋 GitHub main/today_matches.json。"
 )
