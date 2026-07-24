@@ -100,6 +100,15 @@ class PinnacleCrawler:
         except (TypeError, ValueError):
             return "時間錯誤", None
 
+    @staticmethod
+    def is_doubles_match(league_name: Any, participant_names: list[Any]) -> bool:
+        """判斷是否為雙打；聯賽含 Doubles／雙打或選手名稱含斜線即淘汰。"""
+        league_text = str(league_name or "")
+        if "doubles" in league_text.casefold() or "雙打" in league_text:
+            return True
+
+        return any("/" in str(name or "") for name in participant_names)
+
     def get_matches(
         self,
         *,
@@ -107,7 +116,7 @@ class PinnacleCrawler:
         min_odds: float = 1.5,
         max_odds: float = 1.7,
     ) -> list[dict[str, Any]]:
-        """抓取、整理、篩選並依開賽時間排序。"""
+        """抓取、排除雙打、整理、篩選並依開賽時間排序。"""
         if min_odds <= 1 or max_odds <= 1:
             raise ValueError("賠率必須大於 1。")
         if min_odds > max_odds:
@@ -133,11 +142,24 @@ class PinnacleCrawler:
         rows: list[dict[str, Any]] = []
         for matchup in matchups:
             matchup_id = matchup.get("id")
-            participants = {
-                participant.get("alignment"): participant.get("name")
+            participant_items = [
+                participant
                 for participant in matchup.get("participants", [])
                 if isinstance(participant, dict)
+            ]
+            participants = {
+                participant.get("alignment"): participant.get("name")
+                for participant in participant_items
             }
+            league_name = matchup.get("league", {}).get("name") or "未知"
+
+            # 在建立畫面資料與 today_matches.json 之前直接排除所有雙打賽事。
+            if self.is_doubles_match(
+                league_name,
+                [participant.get("name") for participant in participant_items],
+            ):
+                continue
+
             start_text, start_dt = self.parse_time(matchup)
             market_odds = odds_map.get(
                 matchup_id,
@@ -167,7 +189,7 @@ class PinnacleCrawler:
                         else "9999-12-31T23:59:59+08:00"
                     ),
                     "日期時間": start_text,
-                    "聯賽": matchup.get("league", {}).get("name") or "未知",
+                    "聯賽": league_name,
                     "主場": participants.get("home") or "未知",
                     "客場": participants.get("away") or "未知",
                     "主場賠率": home_odds,
